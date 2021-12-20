@@ -1,0 +1,291 @@
+
+/*
+=====
+DEMO DEPENDENCIES
+=====
+*/
+
+/*
+=====
+FIELD STYLES
+=====
+*/
+
+.field{
+
+	/* declaring of component parameters */
+
+	--uiFieldWidth: var(--fieldWidth, 100%);  
+	--uiFieldHeight: var(--fieldHeight, 40px);  
+
+	--uiFieldBorderWidth: var(--fieldBorderWidth, 2px);
+	--uiFieldDisplay: var(--fieldDisplay, inline-block);
+	--uiFieldBorderColor: var(--fieldBorderColor);
+
+	--uiFieldFontSize: var(--fieldFontSize, 1em);
+	--uiFieldHintFontSize: var(--fieldHintFontSize, 1em);
+	--uiFieldPlaceholderColor: var(--fieldPlaceholderColor);
+
+	--uiFieldPaddingRight: var(--fieldPaddingRight, 15px);
+	--uiFieldPaddingBottom: var(--fieldPaddingBottom, 15px);
+	--uiFieldPaddingLeft: var(--fieldPaddingLeft, 15px);   
+
+	/* setting of input parameters */
+
+	--rTextInputPaddingLeft: var(--uiFieldPaddingLeft);
+	--rTextInputPaddingRight: var(--uiFieldPaddingRight);
+	--rTextInputBorderBottomWidth: var(--uiFieldBorderWidth);
+	--rTextInputBorderColor: var(--uiFieldBorderColor);
+	--rTextInputPlaceholderColor: var(--uiFieldPlaceholderColor);
+
+	/* component styles */	
+
+	position: relative;
+	font-size: var(--uiFieldFontSize);
+	display: var(--uiFieldDisplay);
+}
+
+/* input styles */	
+
+.field__input{ 
+	box-sizing: border-box;
+	width: var(--uiFieldWidth);
+	height: var(--uiFieldHeight);
+	padding-left: 1%;
+	border-style: solid;
+	border-color: rgba(0, 0, 0, .2);
+}
+
+select {
+	box-sizing: border-box;
+	width: var(--uiFieldWidth);
+	height: var(--uiFieldHeight);
+	padding-left: 1%;
+	border-style: solid;
+	border-color: rgba(0, 0, 0, .2);
+}
+
+/* styles for the border of input */	
+
+.field__label-wrap{
+	box-sizing: border-box;
+	width: 100%;
+	height: var(--uiFieldHeight);	
+
+	pointer-events: none;
+	cursor: text;
+
+	position: absolute;	
+	left: 0;
+	bottom: 0;
+}
+
+.field__label-wrap::after{
+	content: "";
+	box-sizing: border-box;
+	width: 100%;		
+	height: 0;
+
+	opacity: 0;
+	border: var(--uiFieldBorderWidth) solid var(--fieldBorderColorActive);
+
+	position: absolute;	
+	left: 0;
+	bottom: 0;
+}
+
+/* label styles such as "E-mail" */	
+
+.field__label{
+	line-height: 1;
+	font-size: var(--uiFieldHintFontSize);
+
+	pointer-events: none;
+	opacity: 0;
+
+	position: absolute;	
+	left: var(--uiFieldPaddingLeft);
+	bottom: calc(50% - .5em);	
+}
+
+.field__input:not(:placeholder-shown) ~ .field__label-wrap .field__label{
+
+	/* hiding of label when placeholder of input is visible */	
+
+	opacity: 0;
+	bottom: var(--uiFieldPaddingBottom);
+}
+
+/* styles for the bottom hint */	
+
+.field__hint{
+	box-sizing: border-box;
+	width: 100%;		
+	padding-left: var(--uiFieldPaddingLeft);
+	opacity: 0;	
+
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+
+	position: absolute;	
+	left: 0;
+	bottom: -1.75em;
+}
+
+/* styles for the state when a input is focused */
+
+.field__input:focus{
+	outline: none;
+}
+
+.field__input:focus::-webkit-input-placeholder{
+	opacity: 0;
+}
+
+.field__input:focus::-moz-placeholder{
+	opacity: 0;
+}
+
+.field__input:focus ~ .field__label-wrap::after{
+	height: 100%;
+	opacity: 1;
+}
+
+.field__input:focus ~ .field__label-wrap .field__label{
+	opacity: 1;
+	bottom: calc(var(--uiFieldHeight) + .5em);
+}
+
+.field__input:focus ~ .field__hint{
+	opacity: 1;
+}
+
+.login__button{
+
+	/* field settings */
+
+	/* --fieldBorderColor: #F2A082;
+	--fieldBorderColorActive: #F26430; */
+	--fieldBorderWidth: 2px;
+	--fieldFontSize: 14px;
+	--fieldPaddingLeft: 8px;
+	/* --fieldPlaceholderColor: #000; */
+
+	/* button settings */
+	
+	--rButtonPadding: 10px 20px;
+	--rButtonFontSize: 15px;
+	/* --rButtonBackgroundColor: #F26430; */
+
+	/* styles */
+
+	/* background-color: #F26430; */
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .12), 0 1px 5px 0 rgba(0, 0, 0, .2);
+	border-radius: 4px;
+
+	box-sizing: border-box;
+	padding: 5px 4px 8px;
+
+	position: relative;
+	overflow: hidden;
+}
+
+/* circle styles */
+
+.login::before,
+.login::after,
+.login__form::before{
+	content: "";
+	font-size: 180px;
+	width: 1em;
+	height: 1em;
+
+	border-radius: 50%;
+	background-color: #F26430;
+	position: absolute;
+}
+
+.login::before{
+	top: -.7em;
+	right: -.5em;
+}
+
+.login::after{
+	left: -.9em;
+	bottom: .5em;
+}
+
+.login__form::before{
+	right: -.5em;
+	bottom: -.85em;	
+}
+
+/* title styles */
+
+.login__name{
+	display: block;
+	text-align: center;
+
+	font-size: 25px;
+	font-weight: 700;
+	text-transform: capitalize;
+}
+
+.login__name::after{
+	content: "";
+	display: block;
+	width: 45px;
+	height: 4px;
+	background-color: #F26430;
+
+	margin-top: 15px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+/* form and inside element styles */
+
+.login__form{
+	margin-top: 30px;
+}
+
+.login__group:not(:last-child):nth-child(n+2){
+	margin-top: 35px;
+}
+
+.login__group:last-child{
+	margin-top: 45px;
+}
+
+/* field and inside element styles */
+
+.login__field{
+	width: 100%;
+}
+
+.login__hint{
+	font-size: 13px;
+}
+
+/* button styles */
+
+.login__button{	
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+
+	font-weight: 700;
+	text-transform: uppercase;
+	/* color: #fff; */
+
+	cursor: pointer;
+	border-radius: 4px;
+
+	box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+	transition: box-shadow .28s cubic-bezier(.4,0,.2,1);
+}
+
+.login__button:hover{
+	box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
+}

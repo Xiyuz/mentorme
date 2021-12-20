@@ -1,0 +1,209 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  VPCCidrBlock:
+    Type: String
+    Default: 175.30.0.0/16
+  VPCSubnet01CidrBlock:
+    Type: String
+    Default: 175.30.0.0/24
+  VPCSubnet02CidrBlock:
+    Type: String
+    Default: 175.30.1.0/24
+  VPCSubnet03CidrBlock:
+    Type: String
+    Default: 175.30.2.0/24
+  VPCSubnet04CidrBlock:
+    Type: String
+    Default: 175.30.3.0/24
+  VPCSubnet05CidrBlock:
+    Type: String
+    Default: 175.30.4.0/24
+  VPCSubnet06CidrBlock:
+    Type: String
+    Default: 175.30.5.0/24
+  DBUsername:
+    Type: String
+    Default: admin
+  DBPassword:
+    Type: String
+    Default: mentorme1234
+
+Resources:
+  MentorMeVPCSubnet01:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock:
+        Ref: VPCSubnet01CidrBlock
+      AvailabilityZone: us-east-1a
+      VpcId:
+        Ref: MentorMeVPC
+  MentorMeVPCSubnet02:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock:
+        Ref: VPCSubnet02CidrBlock
+      AvailabilityZone: us-east-1b
+      VpcId:
+        Ref: MentorMeVPC
+  MentorMeVPCSubnet03:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock:
+        Ref: VPCSubnet03CidrBlock
+      AvailabilityZone: us-east-1c
+      VpcId:
+        Ref: MentorMeVPC
+  MentorMeVPCSubnet04:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock:
+        Ref: VPCSubnet04CidrBlock
+      AvailabilityZone: us-east-1d
+      VpcId:
+        Ref: MentorMeVPC
+  MentorMeVPCSubnet05:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock:
+        Ref: VPCSubnet05CidrBlock
+      AvailabilityZone: us-east-1e
+      VpcId:
+        Ref: MentorMeVPC
+  MentorMeVPCSubnet06:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock:
+        Ref: VPCSubnet06CidrBlock
+      AvailabilityZone: us-east-1f
+      VpcId:
+        Ref: MentorMeVPC
+  MentorMeSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: MentorMeVPCSecurityGroup
+      GroupName: MentorMeVPCSecurityGroup
+      SecurityGroupIngress:
+        - CidrIp:
+            Ref: VPCCidrBlock
+          Description: Allow connection to Aurora/MySQL in the same VPC
+          FromPort: 3306
+          IpProtocol: tcp
+          ToPort: 3306
+      VpcId:
+        Ref: MentorMeVPC
+  MentorMeVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock:
+        Ref: VPCCidrBlock
+  MentorMeRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: MentorMeVPC
+  MentorMeVPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId:
+        Ref: MentorMeInternetGateway
+      VpcId:
+        Ref: MentorMeVPC
+  MentorMeInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: MentorMeInternetGateway
+  MentorMeInternetGatewayRoute:
+    Type: AWS::EC2::Route
+    Properties: 
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: MentorMeInternetGateway
+      RouteTableId:
+        Ref: MentorMeRouteTable
+  MentorMeVPCSubnetRouteTableAssociation01:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: MentorMeRouteTable
+      SubnetId:
+        Ref: MentorMeVPCSubnet01
+  MentorMeVPCSubnetRouteTableAssociation02:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: MentorMeRouteTable
+      SubnetId:
+        Ref: MentorMeVPCSubnet02
+  MentorMeVPCSubnetRouteTableAssociation03:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: MentorMeRouteTable
+      SubnetId:
+        Ref: MentorMeVPCSubnet03
+  MentorMeVPCSubnetRouteTableAssociation04:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: MentorMeRouteTable
+      SubnetId:
+        Ref: MentorMeVPCSubnet04
+  MentorMeVPCSubnetRouteTableAssociation05:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: MentorMeRouteTable
+      SubnetId:
+        Ref: MentorMeVPCSubnet05
+  MentorMeVPCSubnetRouteTableAssociation06:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: MentorMeRouteTable
+      SubnetId:
+        Ref: MentorMeVPCSubnet06
+  MentorMeDBClusterSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: MentorMeDBClusterSubnetGroup
+      SubnetIds:
+        - Ref: MentorMeVPCSubnet01
+        - Ref: MentorMeVPCSubnet02
+        - Ref: MentorMeVPCSubnet03
+        - Ref: MentorMeVPCSubnet04
+        - Ref: MentorMeVPCSubnet05
+        - Ref: MentorMeVPCSubnet06
+  MentorMeDBCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      MasterUsername: 
+        Ref: DBUsername
+      MasterUserPassword: 
+        Ref: DBPassword
+      DBClusterIdentifier: mentorme-dbcluster
+      DatabaseName: mentorme
+      Engine: aurora
+      EngineMode: serverless
+      ScalingConfiguration:
+        AutoPause: true
+        MaxCapacity: 2
+        MinCapacity: 1
+        SecondsUntilAutoPause: 300
+      DeletionProtection: false
+      EnableHttpEndpoint: true
+      DBSubnetGroupName:
+        Ref: MentorMeDBClusterSubnetGroup
+      VpcSecurityGroupIds:
+        - Ref: MentorMeSecurityGroup
+  MentorMeCloud9Environment:
+    Type: AWS::Cloud9::EnvironmentEC2
+    Properties:
+      AutomaticStopTimeMinutes: 30
+      Description: MentorMeCloud9Environment
+      InstanceType: t2.micro
+      Name: MentorMeCloud9Environment
+      SubnetId:
+        Ref: MentorMeVPCSubnet01

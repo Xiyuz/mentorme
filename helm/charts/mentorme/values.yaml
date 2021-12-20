@@ -1,0 +1,110 @@
+
+
+# TODO need to change image name
+
+imagePullPolicy: Always
+
+backend:
+  service:
+    annotations: {}
+    ## Specify a service type
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types
+    type: ClusterIP
+    port: 80
+    # nodePort: 32000
+    # loadBalancerIP:
+  image: "mentormeacr.azurecr.io/backend"
+  #image: "nginx"
+#  imageTag: "1.7.9"
+  imageTag: "latest-dev"
+  # either "test" or "sql_server"
+  database: sql_server
+
+
+frontend:
+  service:
+    annotations: {}
+    ## Specify a service type
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types
+    type: ClusterIP
+    port: 80
+    # nodePort: 32000
+    # loadBalancerIP:
+  image: "mentormeacr.azurecr.io/frontend"
+  imageTag: "latest-dev"
+
+
+ingress:
+  domain: .dpsi.jp
+
+
+
+extraVolumes: |
+  # - name: extras
+  #   emptyDir: {}
+
+extraVolumeMounts: |
+  # - name: extras
+  #   mountPath: /usr/share/extras
+  #   readOnly: true
+
+extraInitContainers: |
+  # - name: do-something
+  #   image: busybox
+  #   command: ['do', 'something']
+
+# Optionally specify an array of imagePullSecrets.
+# Secrets must be manually created in the namespace.
+# ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+# imagePullSecrets:
+  # - name: myRegistryKeySecretName
+
+## Node selector
+## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+nodeSelector: {}
+
+## Tolerations for pod assignment
+## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+##
+tolerations: []
+
+
+
+## Security context
+securityContext:
+  enabled: false
+  runAsUser: 999
+  fsGroup: 999
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 100m
+
+
+
+## Configure the service
+## ref: http://kubernetes.io/docs/user-guide/services/
+# TODO we need to provide two services, one internal, another external
+
+## Pods Service Account
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+serviceAccount:
+  ## Specifies whether a ServiceAccount should be created
+  ##
+  create: false
+  ## The name of the ServiceAccount to use.
+  ## If not set and create is true, a name is generated using the mariadb.fullname template
+  # name:
+
+
+
+# Deployment Annotations
+deploymentAnnotations: {}
+
+# To be added to the database server pod(s)
+podAnnotations: {}
+podLabels: {}

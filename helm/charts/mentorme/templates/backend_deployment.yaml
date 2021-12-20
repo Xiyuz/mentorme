@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ template "mentorme.fullname" . }}-backend"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: "{{ template "mentorme.fullname" . }}-backend"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+{{- with .Values.deploymentAnnotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+
+spec:
+  strategy:
+{{ toYaml .Values.strategy | indent 4 }}
+  selector:
+    matchLabels:
+      app: "{{ template "mentorme.fullname" . }}-backend"
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: "{{ template "mentorme.fullname" . }}-backend"
+        release: {{ .Release.Name }}
+{{- with .Values.podLabels }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.podAnnotations }}
+      annotations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+    spec:
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+      {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: "{{ .Values.priorityClassName }}"
+      {{- end }}
+      serviceAccountName: {{ template "mentorme.serviceAccountName" . }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ template "mentorme.fullname" . }}
+        image: "{{ .Values.backend.image }}:{{ .Values.backend.imageTag }}"
+        imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
+        env:
+        - name: DJANGO_DATABASE
+          value: {{ .Values.backend.database  }}
+        command:
+          - "gunicorn"
+        args:
+          - "-b"
+          - "0.0.0.0:80"
+          - "mentorme.wsgi"
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        ports:
+        - name: backend
+          containerPort: 80

@@ -1,0 +1,45 @@
+python-base:
+  tags:
+    - docker-build
+  stage: base
+  variables:
+    REPOSITORY_NAME: python3.9-base
+    IMAGE_TAG: latest
+  script:
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+    - docker build -f $CI_PROJECT_DIR/docker/XenialPython3.8Base.Dockerfile -t $CI_REGISTRY/$REPOSITORY_NAME:$IMAGE_TAG .
+    - docker push $CI_REGISTRY/$REPOSITORY_NAME:$IMAGE_TAG
+  only:
+    changes:
+      - docker/XenialPython3.8Base.Dockerfile
+
+msodbcsql13:
+  tags:
+    - docker-build
+  stage: dependents
+  variables:
+    REPOSITORY_NAME: msodbcsql13
+    IMAGE_TAG: latest
+  script:
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+    - docker build -f $CI_PROJECT_DIR/docker/msodbcsql13.Dockerfile -t $CI_REGISTRY/$REPOSITORY_NAME:$IMAGE_TAG .
+    - docker push $CI_REGISTRY/$REPOSITORY_NAME:$IMAGE_TAG
+  only:
+    changes:
+      - docker/XenialPython3.8Base.Dockerfile
+      - docker/msodbcsql13.Dockerfile
+
+Node-base:
+  tags:
+    - docker-build
+  stage: base
+  variables:
+    REPOSITORY_NAME: nodebase
+    IMAGE_TAG: latest
+  script:
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+    - docker build -f $CI_PROJECT_DIR/docker/NodeBase.Dockerfile -t $CI_REGISTRY/$REPOSITORY_NAME:$IMAGE_TAG .
+    - docker push $CI_REGISTRY/$REPOSITORY_NAME:$IMAGE_TAG
+  only:
+    changes:
+      - docker/NodeBase.Dockerfile
